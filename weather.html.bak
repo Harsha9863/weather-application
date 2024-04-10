@@ -1,0 +1,78 @@
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+        }
+        #weatherData {
+            margin-top: 2rem;
+            border: 1px solid #ccc;
+            padding: 1rem;
+        }
+       .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Weather App</h1>
+    <input type="text" id="cityInput" placeholder="Enter city name...">
+    <button id="getWeatherBtn">Get Weather</button>
+    <div id="weatherData" class="hidden">
+        <p>City: <span id="cityName"></span></p>
+        <p>Temperature: <span id="temperature"></span></p>
+        <p>Description: <span id="description"></span></p>
+    </div>
+    <script>
+        document.getElementById('getWeatherBtn').addEventListener('click', getWeather);
+
+        async function getWeather() {
+            const cityName = document.getElementById('cityInput').value;
+            const apiKey = 'b4dc0804e081e2718035accf7f2ca998'; // Replace with your API key
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayWeatherData(data);
+                } else {
+                    alert('Error fetching weather data: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error fetching weather data: ' + error.message);
+            }
+        }
+
+        function displayWeatherData(data) {
+            document.getElementById('cityName').textContent = data.name;
+            document.getElementById('temperature').textContent = data.main.temp + '°C';
+            document.getElementById('description').textContent = data.weather[0].description;
+
+            document.getElementById('weatherData').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
